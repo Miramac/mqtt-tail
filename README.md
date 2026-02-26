@@ -1,6 +1,8 @@
 # mqtt-tail
 
-> **Built with Claude Code** - This is a personal experiment using [Claude Code](https://claude.ai/claude-code) as an AI code agent. The entire codebase was developed during an interactive session with Claude Code due to my personal interest in AI-assisted development.
+[![npm version](https://img.shields.io/npm/v/mqtt-tail)](https://www.npmjs.com/package/mqtt-tail)
+[![Node.js >= 18](https://img.shields.io/badge/node-%3E%3D18-brightgreen)](https://nodejs.org)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 `tail -f` for MQTT. Watch topics stream live in your terminal.
 
@@ -82,7 +84,7 @@ mqtt-tail --no-color --no-timestamp --raw "#"
 ### Connection
 
 | Flag | Description | Default |
-|---|---|---|
+|------|-------------|---------|
 | `-H, --host <host>` | Broker host | `localhost` |
 | `-p, --port <port>` | Broker port | `1883` (`8883` with `--tls`) |
 | `-u, --username <user>` | Username | |
@@ -97,7 +99,7 @@ mqtt-tail --no-color --no-timestamp --raw "#"
 ### Filtering
 
 | Flag | Description |
-|---|---|
+|------|-------------|
 | `-n, --count <n>` | Exit after n messages |
 | `-f, --filter <regex>` | Only show topics matching regex |
 | `--payload-filter <regex>` | Only show messages whose payload matches regex |
@@ -106,7 +108,7 @@ mqtt-tail --no-color --no-timestamp --raw "#"
 ### Output
 
 | Flag | Description |
-|---|---|
+|------|-------------|
 | `--compact` | One line per message |
 | `--output-json` | Newline-delimited JSON (for piping) |
 | `--raw` | Raw payload, no formatting |
@@ -115,9 +117,15 @@ mqtt-tail --no-color --no-timestamp --raw "#"
 | `--no-color` | Disable colors |
 | `-v, --verbose` | Show connection info and per-message QoS/size/retain |
 
+### Misc
+
+| Flag | Description |
+|------|-------------|
+| `--config <file>` | Path to config file (default: `~/.mqtttailrc.json`) |
+
 ## Output formats
 
-**Default** - pretty-printed, syntax-highlighted JSON, colored topics:
+**Default** — pretty-printed, syntax-highlighted JSON, colored topics:
 ```
 16:42:03.112 │ sensors/temperature
 {
@@ -126,17 +134,17 @@ mqtt-tail --no-color --no-timestamp --raw "#"
 }
 ```
 
-**`--compact`** - one line per message:
+**`--compact`** — one line per message:
 ```
 16:42:03.112 │ sensors/temperature  {"value":23.5,"unit":"C"}
 ```
 
-**`--output-json`** - newline-delimited JSON for scripting:
+**`--output-json`** — newline-delimited JSON for scripting:
 ```json
 {"timestamp":"2024-01-15T16:42:03.112Z","topic":"sensors/temperature","payload":{"value":23.5},"qos":0,"retain":false,"size":28}
 ```
 
-**`--raw`** - no formatting:
+**`--raw`** — no formatting:
 ```
 sensors/temperature {"value":23.5,"unit":"C"}
 ```
@@ -146,11 +154,15 @@ sensors/temperature {"value":23.5,"unit":"C"}
 Options are resolved in this order (highest priority first):
 
 1. **CLI flags**
-2. **`process.env`** - shell environment variables
-3. **`.env` file** - in the current working directory
-4. **`~/.mqtttailrc.json`** - global user config file
+2. **`process.env`** — shell environment variables
+3. **`.env` file** — in the current working directory
+4. **`~/.mqtttailrc.json`** — global user config file
 
 This means you can configure a broker once and forget about it, while still being able to override any value inline.
+
+### First-run setup wizard
+
+On first run (no broker config found), `mqtt-tail` starts an interactive setup wizard that asks for your broker host, port, credentials, and TLS settings, then saves them to `~/.mqtttailrc.json`. Skip it by passing connection flags directly or by pre-creating the config file.
 
 ### With `npx`
 
@@ -193,7 +205,7 @@ MQTT_HOST=broker.example.com MQTT_USERNAME=alice MQTT_PASSWORD=secret npx mqtt-t
 ```
 
 | Variable | Option |
-|---|---|
+|----------|--------|
 | `MQTT_HOST` | `--host` |
 | `MQTT_PORT` | `--port` |
 | `MQTT_USERNAME` | `--username` |
@@ -206,7 +218,13 @@ MQTT_HOST=broker.example.com MQTT_USERNAME=alice MQTT_PASSWORD=secret npx mqtt-t
 
 ### Global config file
 
-`~/.mqtttailrc.json` is loaded automatically on every run. Override the path with `--config <file>`.
+`mqtt-tail` searches the following locations in order:
+
+1. `~/.mqtttailrc.json`
+2. `~/.mqtttailrc`
+3. `.mqtttailrc.json` in the current directory
+
+Override the path with `--config <file>`.
 
 ```json
 {
@@ -221,3 +239,11 @@ MQTT_HOST=broker.example.com MQTT_USERNAME=alice MQTT_PASSWORD=secret npx mqtt-t
 ## Requirements
 
 - Node.js >= 18
+
+## License
+
+MIT
+
+---
+
+> Built with [Claude Code](https://claude.ai/claude-code).
