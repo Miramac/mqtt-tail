@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "Monitor MQTT topics like tail -f",
   "type": "module",
+  "exports": {
+    ".": "./src/api.js"
+  },
   "bin": {
     "mqtt-tail": "src/index.js"
   },

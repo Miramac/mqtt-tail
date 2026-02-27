@@ -13,7 +13,7 @@ function dbg(opts, msg) {
 
 // --- Builders ----------------------------------------------------------------
 
-async function buildConnectOptions(opts) {
+export async function buildConnectOptions(opts) {
   const connectOpts = {
     clientId: opts.clientId || `mqtt-tail-${Math.random().toString(16).slice(2, 8)}`,
     clean: true,

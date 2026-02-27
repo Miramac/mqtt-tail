@@ -236,6 +236,44 @@ Override the path with `--config <file>`.
 }
 ```
 
+## Programmatic API
+
+`mqtt-tail` can also be used as a library inside your own Node.js programs.
+
+```js
+import { subscribe } from 'mqtt-tail'
+
+for await (const { topic, payload } of subscribe('sensors/#', { host: 'mqtt.example.com' })) {
+  console.log(topic, payload.toString())
+}
+```
+
+### `subscribe(topics, opts?)`
+
+Returns an async generator that yields `{ topic, payload, packet }` for each matched message.
+The connection closes and the loop ends automatically when `count` is reached, or when you `break`.
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `topics` | `string \| string[]` | MQTT topic(s) with wildcard support (`+`, `#`) |
+| `opts.host` | `string` | Broker host (default: `localhost`) |
+| `opts.port` | `number` | Broker port (default: `1883`) |
+| `opts.username` | `string` | Username |
+| `opts.password` | `string` | Password |
+| `opts.tls` | `boolean` | Use TLS/SSL (`mqtts://`) |
+| `opts.ca` / `opts.cert` / `opts.key` | `string` | TLS certificate file paths |
+| `opts.filter` | `string` | Regex filter on topic |
+| `opts.payloadFilter` | `string` | Regex filter on payload |
+| `opts.qos` | `number` | QoS level (0\|1\|2, default: `0`) |
+| `opts.count` | `number` | Stop after N messages |
+| `opts.retained` | `boolean` | Set to `false` to skip retained messages |
+| `opts.config` | `string` | Path to a config file |
+
+Config is loaded automatically from `~/.mqtttailrc.json` / `.env`; `opts` overrides it.
+An error is thrown if the connection drops — no silent reconnection.
+
+---
+
 ## Requirements
 
 - Node.js >= 18
